@@ -19,6 +19,7 @@ export function useTableColumns() {
             </div>
           </div>
         ),
+        width: 100,
         maxWidth: 120
       },
       {
@@ -34,6 +35,7 @@ export function useTableColumns() {
             </div>
           </div>
         ),
+        width: 100,
         maxWidth: 120
       },
       {
@@ -41,6 +43,7 @@ export function useTableColumns() {
         id: 'containerId',
         accessor: (d) => d.containerId,
         Cell: ({ value }) => <EditableCell value={value} />,
+        width: 100,
         maxWidth: 100
       },
       {
@@ -55,12 +58,14 @@ export function useTableColumns() {
             <div className="text-secondary"><EditableCell value={value.no} /></div>
           </div>
         ),
+        width: 100,
         maxWidth: 120
       },
       {
         Header: 'Purchase Id',
         accessor: 'purchaseId',
         Cell: ({ value }) => <span className="text-secondary"><EditableCell value={value} /></span>,
+        width: 100,
         maxWidth: 100
       },
       {
@@ -74,6 +79,7 @@ export function useTableColumns() {
             <div className="text-secondary"><EditableCell value={value.line} /></div>
           </div>
         ),
+        width: 100,
         maxWidth: 100
       },
       {
@@ -89,6 +95,7 @@ export function useTableColumns() {
             <div className="text-secondary"><EditableCell value={value.company} /></div>
           </div>
         ),
+        width: 100,
         maxWidth: 120
       }
     ],

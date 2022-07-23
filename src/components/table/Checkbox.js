@@ -11,7 +11,7 @@ export const IndeterminateCheckbox = React.forwardRef(
     }, [resolvedRef, indeterminate])
 
     return (
-      <div>
+      <div style={{ width: '30px' }}>
         <input className="form-check-input" type="checkbox" ref={resolvedRef} {...rest} />
       </div>
     )

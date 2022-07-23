@@ -30,6 +30,10 @@
 }
 
 table th {
-  width: auto !important;
   height: auto !important;
+}
+
+table {
+  table-layout: fixed;
+  width: 100%;
 }

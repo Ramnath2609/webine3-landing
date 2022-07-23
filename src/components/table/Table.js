@@ -5,6 +5,7 @@ import { IndeterminateCheckbox } from './Checkbox'
 import { FilterForm } from './FilterForm';
 import { TiArrowSortedDown, TiArrowSortedUp } from 'react-icons/ti';
 import './style.css';
+import { UpdateModal } from './UpdateModal';
 
 export const EditableCell = ({
   value: initialValue,
@@ -57,7 +58,8 @@ function Table({ columns, data }) {
     canNextPage,
     pageOptions,
     nextPage,
-    previousPage
+    previousPage,
+    selectedFlatRows
   } = useTable(
     {
       columns,
@@ -72,15 +74,13 @@ function Table({ columns, data }) {
         {
           id: 'selection',
           Header: ({ getToggleAllRowsSelectedProps }) => (
-            <div>
-              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-            </div>
+            <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
           ),
           Cell: ({ row }) => (
-            <div>
-              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-            </div>
+            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
           ),
+          width: '30',
+          maxWidth: '40'
         },
         ...columns,
       ])
@@ -88,9 +88,18 @@ function Table({ columns, data }) {
   )
 
   return (
-    <div className='p-4'>
-      <FilterForm />
-      <div>
+    <div className='container-fluid '>
+      <div className="row">
+        <div className="col-md-11 pt-4">
+          <FilterForm />
+        </div>
+        <div className="col-md-1" >
+          <button hidden={!selectedFlatRows.length} type='submit' className='btn btn-success' data-bs-toggle="modal" data-bs-target="#updateModal">
+            Update
+          </button>
+        </div >
+      </div>
+      <div className='container-fluid'>
         <table {...getTableProps()} className="table table-hover table-responsive">
           <thead>
             {headerGroups.map(headerGroup => (
@@ -110,7 +119,6 @@ function Table({ columns, data }) {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {/* <div className='table-container'> */}
             {page.map((row, i) => {
               prepareRow(row)
               return (
@@ -121,7 +129,6 @@ function Table({ columns, data }) {
                 </tr>
               )
             })}
-            {/* </div> */}
           </tbody>
         </table>
         <div className="d-flex justify-content-center align-items-center">
@@ -139,7 +146,7 @@ function Table({ columns, data }) {
           </span>
         </div>
       </div>
-
+      <UpdateModal rows={selectedFlatRows} />
     </div>
   )
 }

@@ -11,3 +11,28 @@ body {
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: lightgray;
+  border-radius: 10px;
+}
+
+.modal-dialog {
+  max-width: 90%;
+}
+
+.modal-body {
+  overflow: auto;
+}
