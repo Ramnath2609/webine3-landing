@@ -1,11 +1,10 @@
 import { MainLayout } from "../layouts/Main"
+import { TableBase } from "../components/table/Table"
 
 export function Home() {
   return (
     <MainLayout>
-      <div>
-        Hello there
-      </div>
+      <TableBase />
     </MainLayout>
   )
 }

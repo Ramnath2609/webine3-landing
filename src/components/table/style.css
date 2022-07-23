@@ -1,0 +1,35 @@
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th {
+  background-color: #d1e7dd;
+}
+
+.form-check-input:checked,
+.form-check-input[type=checkbox]:indeterminate {
+  border-color: rgb(25, 135, 84);
+  background-color: rgb(25, 135, 84);
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgb(0 145 0 / 25%);
+  border-color: rgb(25, 135, 84);
+}
+
+.form-control-plaintext {
+  width: auto;
+  line-height: 0.5;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.25rem rgb(0 145 0 / 25%);
+  border-color: rgb(25, 135, 84);
+}
+
+.table-container {
+  height: 70vh;
+  overflow: auto;
+}
+
+table th {
+  width: auto !important;
+  height: auto !important;
+}
