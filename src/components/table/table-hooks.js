@@ -11,16 +11,14 @@ export function useTableColumns(editedRows) {
           <div className="d-flex flex-column">
             <div>
               <strong>
-                <EditableCell value={value.client} row={row} name={'clientAndOrderNo.client'} editedRows={editedRows} />
+                <EditableCell value={value.client} row={row} name={'clientAndOrderNo.client'} />
               </strong>
             </div>
             <div className="text-secondary">
-              <EditableCell value={value.no} row={row} name={'clientAndOrderNo.no'} editedRows={editedRows} />
+              <EditableCell value={value.no} row={row} name={'clientAndOrderNo.no'} />
             </div>
           </div>
         ),
-        width: 100,
-        maxWidth: 120,
         sortType: (a, b) => a.original.clientAndOrderNo.client > b.original.clientAndOrderNo.client ? 1 : -1
       },
       {
@@ -29,23 +27,19 @@ export function useTableColumns(editedRows) {
         Cell: ({ value, row }) => (
           <div className="d-flex flex-column">
             <div>
-              <EditableCell value={value.date} row={row} name={'deliveryDate.date'} editedRows={editedRows} />
+              <EditableCell value={value.date} row={row} name={'deliveryDate.date'} />
             </div>
             <div className="text-secondary">
-              <EditableCell value={value.time} row={row} name={'deliveryDate.time'} editedRows={editedRows} />
+              <EditableCell value={value.time} row={row} name={'deliveryDate.time'} />
             </div>
           </div>
         ),
-        width: 100,
-        maxWidth: 120
       },
       {
         Header: 'Container Id',
         id: 'containerId',
         accessor: (d) => d.containerId,
-        Cell: ({ value, row }) => <EditableCell value={value} row={row} name={'containerId'} editedRows={editedRows} />,
-        width: 100,
-        maxWidth: 100
+        Cell: ({ value, row }) => <EditableCell value={value} row={row} name={'containerId'} />
       },
       {
         Header: 'Item & Item No ',
@@ -54,21 +48,17 @@ export function useTableColumns(editedRows) {
         Cell: ({ value, row }) => (
           <div className="d-flex flex-column">
             <div className="text-secondary">
-              <EditableCell value={value.item} row={row} name={'itemAndItemNo.item'} editedRows={editedRows} />
+              <EditableCell value={value.item} row={row} name={'itemAndItemNo.item'} />
             </div>
-            <div className="text-secondary"><EditableCell value={value.no} row={row} name={'itemAndItemNo.no'} editedRows={editedRows} /></div>
+            <div className="text-secondary"><EditableCell value={value.no} row={row} name={'itemAndItemNo.no'} /></div>
           </div>
         ),
-        width: 100,
-        maxWidth: 120,
         sortType: (a, b) => a.original.itemAndItemNo.item > b.original.itemAndItemNo.item ? 1 : -1
       },
       {
         Header: 'Purchase Id',
         accessor: 'purchaseId',
-        Cell: ({ value, row }) => <span className="text-secondary"><EditableCell value={value} row={row} name={'purchaseId'} editedRows={editedRows} /></span>,
-        width: 100,
-        maxWidth: 100
+        Cell: ({ value, row }) => <span className="text-secondary"><EditableCell value={value} row={row} name={'purchaseId'} /></span>,
       },
       {
         Header: 'PO Date & Line',
@@ -78,11 +68,9 @@ export function useTableColumns(editedRows) {
             <div className="text-secondary">
               <EditableCell value={value.date} row={row} name={'poDateAndLine.date'} />
             </div>
-            <div className="text-secondary"><EditableCell value={value.line} row={row} name={'poDateAndLine.line'} editedRows={editedRows} /></div>
+            <div className="text-secondary"><EditableCell value={value.line} row={row} name={'poDateAndLine.line'} /></div>
           </div>
         ),
-        width: 100,
-        maxWidth: 100
       },
       {
         Header: 'PO Purchase & Company',
@@ -95,17 +83,15 @@ export function useTableColumns(editedRows) {
               </strong>
             </div>
             <div className="text-secondary">
-              <EditableCell value={value.company} row={row} name={'poPurchaseAndCompany.company'} editedRows={editedRows} />
+              <EditableCell value={value.company} row={row} name={'poPurchaseAndCompany.company'} />
             </div>
           </div>
         ),
-        width: 100,
-        maxWidth: 120,
         sortType: (a, b) => a.original.poPurchaseAndCompany.purchase > b.original.poPurchaseAndCompany.purchase ? 1 : -1
 
       }
     ],
-    [editedRows]
+    []
   )
   return { columns };
 }

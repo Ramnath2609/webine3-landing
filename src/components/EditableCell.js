@@ -1,12 +1,12 @@
 import React from "react";
+import { useTableContext } from "../contexts/TableContext";
 
 export const EditableCell = ({
   value: initialValue,
   row: { index, original },
-  name,
-  editedRows
+  name
 }) => {
-  // We need to keep and update the state of the cell normally
+  const { setIsEdit, setEditedRows, editedRows } = useTableContext();
   const [value, setValue] = React.useState(initialValue)
   const [editable, setIsEditable] = React.useState(false);
 
@@ -27,13 +27,13 @@ export const EditableCell = ({
     } else {
       obj[name] = value;
     }
-    editedRows.push(obj);
-    console.log('updated', obj);
-  }, [editedRows, name, original, value]);
+    setEditedRows([...editedRows, obj])
+  }, [editedRows, name, original, setEditedRows, value]);
 
   const onDoubleClick = React.useCallback(() => {
     setIsEditable(!editable)
-  }, [editable])
+    setIsEdit(true);
+  }, [editable, setIsEdit])
 
   return <input onDoubleClick={onDoubleClick} value={value} className={`form-control${editable ? '' : '-plaintext'}`} onChange={onChange} onBlur={onBlur} />
 }

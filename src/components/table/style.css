@@ -24,28 +24,8 @@
   border-color: rgb(25, 135, 84);
 }
 
-.table-container {
-  height: 70vh;
-  overflow: auto;
-}
-
-/* table th {
-  height: auto !important;
-} */
-
 .table-responsive th:nth-child(1) {
   width: 30px;
-}
-
-table {
-  table-layout: fixed;
-  width: 100%;
-}
-
-.tableFixHead thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
 }
 
 .table-wrap {

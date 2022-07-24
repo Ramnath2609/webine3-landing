@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { useTable, useRowSelect, usePagination, useSortBy } from 'react-table'
+import { useTable, useRowSelect, usePagination, useSortBy, useFlexLayout } from 'react-table'
 import { useTableColumns } from './table-hooks'
 import { IndeterminateCheckbox } from './Checkbox'
 import { FilterForm } from '../FilterForm';
@@ -8,14 +8,18 @@ import './style.css';
 import { useTableContext } from '../../contexts/TableContext';
 import { UpdateModal } from '../UpdateModal';
 import { EditableCell } from '../EditableCell';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const defaultColumn = {
   Cell: EditableCell,
-  width: 'auto'
+  width: 150,
+  // maxWidth: 250
 }
 
 
-function Table({ columns, data, updateData }) {
+function Table({ columns, data }) {
+  const { isEdit, editedRows, setEditedRows, setData } = useTableContext();
   const {
     getTableProps,
     getTableBodyProps,
@@ -38,6 +42,7 @@ function Table({ columns, data, updateData }) {
     },
     useSortBy,
     usePagination,
+    useFlexLayout,
     useRowSelect,
     hooks => {
       hooks.visibleColumns.push(columns => [
@@ -57,17 +62,36 @@ function Table({ columns, data, updateData }) {
     }
   )
 
+  const notify = () => toast.success('Shipment details updated successfully');
+
+  const onSave = useCallback(() => {
+    const prevValues = JSON.parse(localStorage.getItem('table-data'));
+    editedRows.forEach((value) => {
+      const index = prevValues.findIndex((item) => item.id === value.id);
+      prevValues.splice(index, 1, value);
+    })
+    window.localStorage.setItem('table-data', JSON.stringify(prevValues));
+    setEditedRows([]);
+    setData(prevValues);
+    notify();
+  }, [editedRows, setData, setEditedRows]);
+
   return (
     <div className='container-fluid '>
       <div className="row align-items-center">
-        <div className="col-md-11 pt-4">
+        <div className="col-md-10 pt-4">
           <FilterForm />
         </div>
-        <div className="col-md-1" >
-          <button hidden={!selectedFlatRows.length} type='submit' className='btn btn-success' data-bs-toggle="modal" data-bs-target="#updateModal">
+        {selectedFlatRows.length > 0 && (<div className="col-md-1" >
+          <button type='submit' className='btn btn-success' data-bs-toggle="modal" data-bs-target="#updateModal">
             Update
           </button>
-        </div >
+        </div >)}
+        {isEdit && (<div className="col-md-1" >
+          <button className='btn btn-success' onClick={onSave}>
+            Save
+          </button>
+        </div >)}
       </div>
       <div className='container-fluid table-wrap '>
         <table {...getTableProps()} className="table table-hover table-responsive tableFixHead">
@@ -117,15 +141,15 @@ function Table({ columns, data, updateData }) {
           </strong>{' '}
         </span>
       </div>
-      <UpdateModal rows={selectedFlatRows} />
+      <UpdateModal rows={selectedFlatRows} notify={notify} />
+      <ToastContainer />
     </div>
   )
 }
 
 export function TableBase() {
   const { data, filteredData, isFilterApplied } = useTableContext();
-  const editedRows = []
-  const { columns } = useTableColumns(editedRows);
+  const { columns } = useTableColumns();
   const memoizedData = React.useMemo(() => isFilterApplied ? filteredData : data, [data, filteredData, isFilterApplied]);
 
   const updateData = useCallback((props) => {

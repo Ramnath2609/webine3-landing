@@ -1,15 +1,13 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useTable, useRowSelect, usePagination } from "react-table"
 import { useTableColumns } from "./table/table-hooks"
 import { useTableContext } from "../contexts/TableContext";
 
-
-export function UpdateModal({ rows }) {
-  const { setData } = useTableContext();
-  const [editedRows, setEditedRows] = useState([]);
-  const { columns } = useTableColumns(editedRows);
+export function UpdateModal({ rows, notify }) {
+  const { setData, editedRows, setEditedRows } = useTableContext();
+  // const [editedRows, setEditedRows] = useState([]);
+  const { columns } = useTableColumns();
   const data = useMemo(() => rows.map((row) => row.original), [rows]);
-
 
   const onUpdate = useCallback(() => {
     const prevValues = JSON.parse(localStorage.getItem('table-data'));
@@ -20,8 +18,8 @@ export function UpdateModal({ rows }) {
     window.localStorage.setItem('table-data', JSON.stringify(prevValues));
     setEditedRows([]);
     setData(prevValues);
-
-  }, [editedRows, setData]);
+    notify();
+  }, [editedRows, notify, setData, setEditedRows]);
 
 
   return (
@@ -39,7 +37,7 @@ export function UpdateModal({ rows }) {
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Close</button>
-            <button type="button" className="btn btn-primary" onClick={onUpdate}>Save changes</button>
+            <button type="button" className="btn btn-success" id="notificationsToast" data-bs-dismiss="modal" onClick={onUpdate}>Save changes</button>
           </div>
         </div>
       </div>
