@@ -1,44 +1,13 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTable, useRowSelect, usePagination, useSortBy } from 'react-table'
-import { useTableColumns, data } from './table-hooks'
+import { useTableColumns } from './table-hooks'
 import { IndeterminateCheckbox } from './Checkbox'
-import { FilterForm } from './FilterForm';
+import { FilterForm } from '../FilterForm';
 import { TiArrowSortedDown, TiArrowSortedUp } from 'react-icons/ti';
 import './style.css';
-import { UpdateModal } from './UpdateModal';
-
-export const EditableCell = ({
-  value: initialValue,
-  // row: { index },
-  // column: { id },
-  // updateMyData, // This is a custom function that we supplied to our table instance
-}) => {
-  // We need to keep and update the state of the cell normally
-  const [value, setValue] = React.useState(initialValue)
-  const [editable, setIsEditable] = React.useState(false);
-
-  const onChange = e => {
-    setValue(e.target.value)
-  }
-
-  // We'll only update the external data when the input is blurred
-  // const onBlur = () => {
-  //   updateMyData(index, id, value)
-  // }
-
-  // If the initialValue is changed external, sync it up with our state
-  React.useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
-
-  const onBlur = React.useCallback(() => setIsEditable(false), []);
-
-  const onDoubleClick = React.useCallback(() => {
-    setIsEditable(!editable)
-  }, [editable])
-
-  return <input onDoubleClick={onDoubleClick} value={value} className={`form-control${editable ? '' : '-plaintext'}`} onChange={onChange} onBlur={onBlur} />
-}
+import { useTableContext } from '../../contexts/TableContext';
+import { UpdateModal } from '../UpdateModal';
+import { EditableCell } from '../EditableCell';
 
 const defaultColumn = {
   Cell: EditableCell,
@@ -46,7 +15,7 @@ const defaultColumn = {
 }
 
 
-function Table({ columns, data }) {
+function Table({ columns, data, updateData }) {
   const {
     getTableProps,
     getTableBodyProps,
@@ -64,7 +33,8 @@ function Table({ columns, data }) {
     {
       columns,
       data,
-      defaultColumn
+      defaultColumn,
+      autoResetSelectedRows: false,
     },
     useSortBy,
     usePagination,
@@ -89,7 +59,7 @@ function Table({ columns, data }) {
 
   return (
     <div className='container-fluid '>
-      <div className="row">
+      <div className="row align-items-center">
         <div className="col-md-11 pt-4">
           <FilterForm />
         </div>
@@ -99,8 +69,8 @@ function Table({ columns, data }) {
           </button>
         </div >
       </div>
-      <div className='container-fluid'>
-        <table {...getTableProps()} className="table table-hover table-responsive">
+      <div className='container-fluid table-wrap '>
+        <table {...getTableProps()} className="table table-hover table-responsive tableFixHead">
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
@@ -131,20 +101,21 @@ function Table({ columns, data }) {
             })}
           </tbody>
         </table>
-        <div className="d-flex justify-content-center align-items-center">
-          <button className='btn btn-light' onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {'<'}
-          </button>{' '}
-          <button className='btn btn-light' onClick={() => nextPage()} disabled={!canNextPage}>
-            {'>'}
-          </button>{' '}
-          <span>
-            Page{' '}
-            <strong>
-              {pageIndex + 1} of {pageOptions.length}
-            </strong>{' '}
-          </span>
-        </div>
+      </div>
+
+      <div className="d-flex justify-content-center align-items-center">
+        <button className='btn btn-light' onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {'<'}
+        </button>{' '}
+        <button className='btn btn-light' onClick={() => nextPage()} disabled={!canNextPage}>
+          {'>'}
+        </button>{' '}
+        <span>
+          Page{' '}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{' '}
+        </span>
       </div>
       <UpdateModal rows={selectedFlatRows} />
     </div>
@@ -152,11 +123,17 @@ function Table({ columns, data }) {
 }
 
 export function TableBase() {
-  const { columns } = useTableColumns();
+  const { data, filteredData, isFilterApplied } = useTableContext();
+  const editedRows = []
+  const { columns } = useTableColumns(editedRows);
+  const memoizedData = React.useMemo(() => isFilterApplied ? filteredData : data, [data, filteredData, isFilterApplied]);
 
-  const memoizedData = React.useMemo(() => data, [])
+  const updateData = useCallback((props) => {
+    console.log('within update data', props)
+  }, []);
+
 
   return (
-    <Table columns={columns} data={memoizedData} />
+    <Table columns={columns} data={memoizedData} updateData={updateData} />
   )
 }

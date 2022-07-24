@@ -1,37 +1,38 @@
 import { useMemo } from "react";
-import { EditableCell } from "./Table";
+import { EditableCell } from "../EditableCell";
 
-export function useTableColumns() {
+export function useTableColumns(editedRows) {
   const columns = useMemo(
     () => [
       {
         Header: 'Client & Order No.',
         accessor: (d) => d.clientAndOrderNo,
-        Cell: ({ value }) => (
+        Cell: ({ value, row }) => (
           <div className="d-flex flex-column">
             <div>
               <strong>
-                <EditableCell value={value.client} />
+                <EditableCell value={value.client} row={row} name={'clientAndOrderNo.client'} editedRows={editedRows} />
               </strong>
             </div>
             <div className="text-secondary">
-              <EditableCell value={value.no} />
+              <EditableCell value={value.no} row={row} name={'clientAndOrderNo.no'} editedRows={editedRows} />
             </div>
           </div>
         ),
         width: 100,
-        maxWidth: 120
+        maxWidth: 120,
+        sortType: (a, b) => a.original.clientAndOrderNo.client > b.original.clientAndOrderNo.client ? 1 : -1
       },
       {
         Header: 'Promised Delivery Date',
         accessor: (d) => d.deliveryDate,
-        Cell: ({ value }) => (
+        Cell: ({ value, row }) => (
           <div className="d-flex flex-column">
             <div>
-              <EditableCell value={value.date} />
+              <EditableCell value={value.date} row={row} name={'deliveryDate.date'} editedRows={editedRows} />
             </div>
             <div className="text-secondary">
-              <EditableCell value={value.time} />
+              <EditableCell value={value.time} row={row} name={'deliveryDate.time'} editedRows={editedRows} />
             </div>
           </div>
         ),
@@ -42,7 +43,7 @@ export function useTableColumns() {
         Header: 'Container Id',
         id: 'containerId',
         accessor: (d) => d.containerId,
-        Cell: ({ value }) => <EditableCell value={value} />,
+        Cell: ({ value, row }) => <EditableCell value={value} row={row} name={'containerId'} editedRows={editedRows} />,
         width: 100,
         maxWidth: 100
       },
@@ -50,33 +51,34 @@ export function useTableColumns() {
         Header: 'Item & Item No ',
         id: 'itemAndItemNo',
         accessor: (d) => d.itemAndItemNo,
-        Cell: ({ value }) => (
+        Cell: ({ value, row }) => (
           <div className="d-flex flex-column">
             <div className="text-secondary">
-              <EditableCell value={value.item} />
+              <EditableCell value={value.item} row={row} name={'itemAndItemNo.item'} editedRows={editedRows} />
             </div>
-            <div className="text-secondary"><EditableCell value={value.no} /></div>
+            <div className="text-secondary"><EditableCell value={value.no} row={row} name={'itemAndItemNo.no'} editedRows={editedRows} /></div>
           </div>
         ),
         width: 100,
-        maxWidth: 120
+        maxWidth: 120,
+        sortType: (a, b) => a.original.itemAndItemNo.item > b.original.itemAndItemNo.item ? 1 : -1
       },
       {
         Header: 'Purchase Id',
         accessor: 'purchaseId',
-        Cell: ({ value }) => <span className="text-secondary"><EditableCell value={value} /></span>,
+        Cell: ({ value, row }) => <span className="text-secondary"><EditableCell value={value} row={row} name={'purchaseId'} editedRows={editedRows} /></span>,
         width: 100,
         maxWidth: 100
       },
       {
         Header: 'PO Date & Line',
         accessor: (d) => d.poDateAndLine,
-        Cell: ({ value }) => (
+        Cell: ({ value, row }) => (
           <div className="d-flex flex-column">
             <div className="text-secondary">
-              <EditableCell value={value.date} />
+              <EditableCell value={value.date} row={row} name={'poDateAndLine.date'} />
             </div>
-            <div className="text-secondary"><EditableCell value={value.line} /></div>
+            <div className="text-secondary"><EditableCell value={value.line} row={row} name={'poDateAndLine.line'} editedRows={editedRows} /></div>
           </div>
         ),
         width: 100,
@@ -85,27 +87,32 @@ export function useTableColumns() {
       {
         Header: 'PO Purchase & Company',
         accessor: (d) => d.poPurchaseAndCompany,
-        Cell: ({ value }) => (
+        Cell: ({ value, row }) => (
           <div className="d-flex flex-column">
             <div>
               <strong>
-                <EditableCell value={value.purchase} />
+                <EditableCell value={value.purchase} row={row} name={'poPurchaseAndCompany.purchase'} />
               </strong>
             </div>
-            <div className="text-secondary"><EditableCell value={value.company} /></div>
+            <div className="text-secondary">
+              <EditableCell value={value.company} row={row} name={'poPurchaseAndCompany.company'} editedRows={editedRows} />
+            </div>
           </div>
         ),
         width: 100,
-        maxWidth: 120
+        maxWidth: 120,
+        sortType: (a, b) => a.original.poPurchaseAndCompany.purchase > b.original.poPurchaseAndCompany.purchase ? 1 : -1
+
       }
     ],
-    []
+    [editedRows]
   )
   return { columns };
 }
 
 export const data = [
   {
+    id: '1',
     clientAndOrderNo: {
       client: 'HCL Computers',
       no: 'CDX - 40561'
@@ -114,12 +121,12 @@ export const data = [
       date: '22 Aug 2022',
       time: '14:00 - 16:00'
     },
-    containerId: 'DX2341234',
+    containerId: 'BX2341234',
     itemAndItemNo: {
       item: 'Computer Parts',
-      no: '1234123DAFSDF'
+      no: '5534123DAFSDF'
     },
-    purchaseId: '928345024',
+    purchaseId: '88345024',
     poDateAndLine: {
       date: '14 July 2022',
       line: 'DAFDAFDSF'
@@ -130,6 +137,7 @@ export const data = [
     }
   },
   {
+    id: '2',
     clientAndOrderNo: {
       client: 'Dell Computers',
       no: 'CDX - 40561'
@@ -138,12 +146,12 @@ export const data = [
       date: '22 Aug 2022',
       time: '14:00 - 16:00'
     },
-    containerId: 'DX2341234',
+    containerId: 'XX2341234',
     itemAndItemNo: {
       item: 'Computer Parts',
       no: '1234123DAFSDF'
     },
-    purchaseId: '928345024',
+    purchaseId: '128345024',
     poDateAndLine: {
       date: '14 July 2022',
       line: 'DAFDAFDSF'
@@ -154,6 +162,7 @@ export const data = [
     }
   },
   {
+    id: '3',
     clientAndOrderNo: {
       client: 'Apple Computers',
       no: 'CDX - 40561'
@@ -162,12 +171,12 @@ export const data = [
       date: '22 Aug 2022',
       time: '14:00 - 16:00'
     },
-    containerId: 'DX2341234',
+    containerId: 'SX2341234',
     itemAndItemNo: {
       item: 'Computer Parts',
       no: '1234123DAFSDF'
     },
-    purchaseId: '928345024',
+    purchaseId: '528345024',
     poDateAndLine: {
       date: '14 July 2022',
       line: 'DAFDAFDSF'
@@ -178,6 +187,7 @@ export const data = [
     }
   },
   {
+    id: '4',
     clientAndOrderNo: {
       client: 'Usha Armour',
       no: 'CDX - 40561'
@@ -202,6 +212,7 @@ export const data = [
     }
   },
   {
+    id: '5',
     clientAndOrderNo: {
       client: 'Bata Footwear',
       no: 'CDX - 40561'
@@ -226,6 +237,7 @@ export const data = [
     }
   },
   {
+    id: '6',
     clientAndOrderNo: {
       client: 'HCL Computers',
       no: 'CDX - 40561'
@@ -250,6 +262,7 @@ export const data = [
     }
   },
   {
+    id: '7',
     clientAndOrderNo: {
       client: 'HCL Computers',
       no: 'CDX - 40561'
@@ -274,6 +287,7 @@ export const data = [
     }
   },
   {
+    id: '8',
     clientAndOrderNo: {
       client: 'HCL Computers',
       no: 'CDX - 40561'
@@ -298,6 +312,7 @@ export const data = [
     }
   },
   {
+    id: '9',
     clientAndOrderNo: {
       client: 'HCL Computers',
       no: 'CDX - 40561'
@@ -322,6 +337,7 @@ export const data = [
     }
   },
   {
+    id: '10',
     clientAndOrderNo: {
       client: 'HCL Computers',
       no: 'CDX - 40561'
@@ -346,6 +362,7 @@ export const data = [
     }
   },
   {
+    id: '11',
     clientAndOrderNo: {
       client: 'HCL Computers',
       no: 'CDX - 40561'

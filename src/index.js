@@ -3,6 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { data } from './components/table/table-hooks';
+
+if (!window.localStorage.getItem('table-data')) {
+  window.localStorage.setItem('table-data', JSON.stringify(data));
+}
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

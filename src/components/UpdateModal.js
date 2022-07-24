@@ -1,27 +1,45 @@
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTable, useRowSelect, usePagination } from "react-table"
-import { useTableColumns } from "./table-hooks"
+import { useTableColumns } from "./table/table-hooks"
+import { useTableContext } from "../contexts/TableContext";
 
 
 export function UpdateModal({ rows }) {
-  const { columns } = useTableColumns();
+  const { setData } = useTableContext();
+  const [editedRows, setEditedRows] = useState([]);
+  const { columns } = useTableColumns(editedRows);
   const data = useMemo(() => rows.map((row) => row.original), [rows]);
+
+
+  const onUpdate = useCallback(() => {
+    const prevValues = JSON.parse(localStorage.getItem('table-data'));
+    editedRows.forEach((value) => {
+      const index = prevValues.findIndex((item) => item.id === value.id);
+      prevValues.splice(index, 1, value);
+    })
+    window.localStorage.setItem('table-data', JSON.stringify(prevValues));
+    setEditedRows([]);
+    setData(prevValues);
+
+  }, [editedRows, setData]);
+
+
   return (
-    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModal" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
+    <div className="modal fade" id="updateModal" tabIndex="-1" aria-labelledby="updateModal" aria-hidden="true">
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="modal-header">
             <div className="d-flex justify-content-center w-100">
-              <h5 class="modal-title" id="updateModal">Update Shipment Details</h5>
+              <h5 className="modal-title" id="updateModal">Update Shipment Details</h5>
             </div>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
+          <div className="modal-body">
             <Table data={data} columns={columns} />
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+          <div className="modal-footer">
+            <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            <button type="button" className="btn btn-primary" onClick={onUpdate}>Save changes</button>
           </div>
         </div>
       </div>
@@ -54,7 +72,7 @@ function Table({ columns, data }) {
   return (
     <div className='p-4'>
       <div>
-        <table {...getTableProps()} className="table table-hover table-responsive">
+        <table {...getTableProps()} className="table table-hover">
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
