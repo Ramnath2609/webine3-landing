@@ -19,7 +19,7 @@ const defaultColumn = {
 
 
 function Table({ columns, data }) {
-  const { isEdit, editedRows, setEditedRows, setData } = useTableContext();
+  const { isEdit, editedRows, setEditedRows, setData, setIsEdit } = useTableContext();
   const {
     getTableProps,
     getTableBodyProps,
@@ -73,8 +73,9 @@ function Table({ columns, data }) {
     window.localStorage.setItem('table-data', JSON.stringify(prevValues));
     setEditedRows([]);
     setData(prevValues);
+    setIsEdit(false);
     notify();
-  }, [editedRows, setData, setEditedRows]);
+  }, [editedRows, setData, setEditedRows, setIsEdit]);
 
   return (
     <div className='container-fluid '>
@@ -93,7 +94,7 @@ function Table({ columns, data }) {
           </button>
         </div >)}
       </div>
-      <div className='container-fluid table-wrap '>
+      <div className='container-fluid table-wrap'>
         <table {...getTableProps()} className="table table-hover table-responsive tableFixHead">
           <thead>
             {headerGroups.map(headerGroup => (

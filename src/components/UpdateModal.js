@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { useTable, useRowSelect, usePagination } from "react-table"
+import { useTable, useRowSelect, usePagination, useFlexLayout } from "react-table"
 import { useTableColumns } from "./table/table-hooks"
 import { useTableContext } from "../contexts/TableContext";
 
@@ -64,13 +64,14 @@ function Table({ columns, data }) {
       data
     },
     usePagination,
-    useRowSelect
+    useRowSelect,
+    useFlexLayout
   )
 
   return (
     <div className='p-4'>
-      <div>
-        <table {...getTableProps()} className="table table-hover">
+      <div className="modal-table table-wrap">
+        <table {...getTableProps()} className="table table-hover table-responsive">
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
